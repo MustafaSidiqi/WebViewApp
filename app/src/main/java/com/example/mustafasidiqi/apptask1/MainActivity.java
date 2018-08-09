@@ -47,16 +47,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             EditText urlText = (EditText) findViewById(R.id.url);
             url = String.valueOf(urlText.getText());
 
+            //Get url and save in shared preferences
             url = prefs.getString("url", url);
-
             prefs.edit().putString("URL", url).commit();
 
             WebView webview = (WebView) this.findViewById(R.id.webView);
-
             webview.getSettings().setJavaScriptEnabled(true);
-
-            System.out.println("URL: " + url);
             webview.loadUrl(url);
+
+            try {
 
             //Hiding keyboard
             InputMethodManager input = (InputMethodManager)
@@ -64,6 +63,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             input.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
+
+            } catch(Exception e){
+                //This catch block catches all the exceptions
+                e.printStackTrace();
+            }
+
+            //Read from shared preferences
+            String readURL = prefs.getString("URL", "");
+            System.out.println("readURL: " + readURL);
         }
 
         if(view.getId() == R.id.wifi) {
