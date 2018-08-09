@@ -2,8 +2,11 @@ package com.example.mustafasidiqi.apptask1;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.SettingInjectorService;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,7 +18,10 @@ import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button webbtn, wifibtn;
+    Button webbtn, wifibtn, fragmentbtn;
+    String url;
+
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,17 +30,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Button webbtn = (Button) findViewById(R.id.button);
         Button wifibtn = (Button) findViewById(R.id.wifi);
+        Button fragmentbtn = (Button) findViewById(R.id.fragmentBtn);
 
         webbtn.setOnClickListener(this);
         wifibtn.setOnClickListener(this);
+        fragmentbtn.setOnClickListener(this);
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
     }
 
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.button) {
+
             EditText urlText = (EditText) findViewById(R.id.url);
-            String url = String.valueOf(urlText.getText());
+            url = String.valueOf(urlText.getText());
+
+            url = prefs.getString("url", url);
+
+            prefs.edit().putString("URL", url).commit();
+
             WebView webview = (WebView) this.findViewById(R.id.webView);
 
             webview.getSettings().setJavaScriptEnabled(true);
@@ -53,6 +69,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(view.getId() == R.id.wifi) {
             System.out.println("WIFI");
             Intent i = new Intent(Settings.ACTION_WIFI_SETTINGS);
+        }
+
+        if(view.getId() == R.id.fragmentBtn) {
+            System.out.println("Fragment");
+            Intent i = new Intent(MainActivity.this, activity_2.class);
+            startActivity(i);
+
         }
     }
 }
